@@ -2,17 +2,21 @@
 #define SPINLOCK_HPP
 
 #include <atomic>
-#include <time.h>
+#include <cstdint>
+#include <ctime>
 
 class spinlock
 {
 public:
     void lock()
     {
-        while (flag.load(std::memory_order::relaxed) ||
-               flag.exchange(true, std::memory_order::acquire)) {
-            timespec ts{};
-            nanosleep(&ts, nullptr);
+        for (std::uint64_t i = 0; flag.load(std::memory_order::relaxed) ||
+             flag.exchange(true, std::memory_order::acquire);
+             ++i) {
+            if (i == 4) {
+                timespec ts{};
+                nanosleep(&ts, nullptr);
+            }
         }
     }
 

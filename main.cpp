@@ -16,7 +16,7 @@ int main()
         std::lock_guard<spinlock> lockGuard{spinLock};
 
         for (std::uint64_t i = 0; i < 1000000; ++i) {
-            counter++;
+            ++counter;
         }
     };
 
