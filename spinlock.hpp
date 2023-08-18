@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <ctime>
 
-class spinlock
+class SpinLock
 {
 public:
     void lock()
@@ -27,6 +27,27 @@ public:
 
 private:
     std::atomic<bool> flag{};
+};
+
+template<typename Mutex>
+class LockGuard
+{
+public:
+    explicit LockGuard(Mutex &mutex) : _mutex(mutex)
+    {
+        _mutex.lock();
+    }
+
+    ~LockGuard()
+    {
+        _mutex.unlock();
+    }
+
+    LockGuard(const LockGuard &) = delete;
+    LockGuard &operator=(const LockGuard &) = delete;
+
+private:
+    Mutex &_mutex;
 };
 
 #endif

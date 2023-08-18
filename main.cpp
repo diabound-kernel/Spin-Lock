@@ -1,5 +1,4 @@
 #include <iostream>
-#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -10,10 +9,10 @@ int main()
     std::vector<std::thread> threads{};
     std::uint64_t concurrency{std::thread::hardware_concurrency()};
     std::uint64_t counter{};
-    spinlock spinLock{};
+    SpinLock spinLock{};
 
     auto threadTask = [&]() {
-        std::lock_guard<spinlock> lockGuard{spinLock};
+        LockGuard<SpinLock> lockGuard{spinLock};
 
         for (std::uint64_t i = 0; i < 1000000; ++i) {
             ++counter;
